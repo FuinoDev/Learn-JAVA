@@ -8,22 +8,20 @@ const showLogin = document.getElementById("showLogin");
 const authTitle = document.getElementById("authTitle");
 const authDescription = document.getElementById("authDescription");
 
+const loginForm = document.getElementById("loginForm");
 const loginEmail = document.getElementById("loginEmail");
 const loginPassword = document.getElementById("loginPassword");
 const loginPasswordButton = document.getElementById("loginPasswordButton");
 
-const registerFirstName = document.getElementById("registerFirstName");
-const registerLastName = document.getElementById("registerLastName");
+const registerForm = document.getElementById("registerForm");
+const firstName = document.getElementById("firstName");
+const lastName = document.getElementById("lastName");
 const registerEmail = document.getElementById("registerEmail");
-
 const registerPassword = document.getElementById("registerPassword");
 const registerPasswordButton = document.getElementById("registerPasswordButton");
 
 const confirmPassword = document.getElementById("confirmPassword");
 const passwordMessage = document.getElementById("passwordMessage");
-
-const loginForm = document.getElementById("loginForm");
-const registerForm = document.getElementById("registerForm");
 
 // Switch
 showRegister.addEventListener("click", function () {
@@ -93,18 +91,21 @@ registerForm.addEventListener("submit", async function (event) {
     }
 
     try {
-        const response = await fetch("http://localhost:8080/api/auth/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                firstName: registerFirstName.value.trim(),
-                lastName: registerLastName.value.trim(),
-                email: registerEmail.value.trim(),
-                password: registerPassword.value
-            })
-        });
+        const response = await fetch(
+            "http://localhost:8080/api/auth/register",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    firstName: firstName.value.trim(),
+                    lastName: lastName.value.trim(),
+                    email: registerEmail.value.trim(),
+                    password: registerPassword.value
+                })
+            }
+        );
 
         const data = await response.json();
 
@@ -123,6 +124,8 @@ registerForm.addEventListener("submit", async function (event) {
 
         authTitle.textContent = "Welcome Back";
         authDescription.textContent = "Sign in to continue to your account.";
+
+        loginEmail.value = data.email;
     } catch (error) {
         alert("Cannot connect to the server");
     }
@@ -133,16 +136,19 @@ loginForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     try {
-        const response = await fetch("http://localhost:8080/api/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email: loginEmail.value.trim(),
-                password: loginPassword.value
-            })
-        });
+        const response = await fetch(
+            "http://localhost:8080/api/auth/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: loginEmail.value.trim(),
+                    password: loginPassword.value
+                })
+            }
+        );
 
         const data = await response.json();
 
