@@ -12,30 +12,33 @@ const loginForm = document.getElementById("loginForm");
 const loginEmail = document.getElementById("loginEmail");
 const loginPassword = document.getElementById("loginPassword");
 const loginPasswordButton = document.getElementById("loginPasswordButton");
+
 const loginEmailError = document.getElementById("loginEmailError");
 const loginPasswordError = document.getElementById("loginPasswordError");
 const loginMessage = document.getElementById("loginMessage");
 
 const registerForm = document.getElementById("registerForm");
+
 const firstName = document.getElementById("firstName");
 const lastName = document.getElementById("lastName");
 const registerEmail = document.getElementById("registerEmail");
 const registerPassword = document.getElementById("registerPassword");
-const registerPasswordButton = document.getElementById("registerPasswordButton");
 const confirmPassword = document.getElementById("confirmPassword");
 const terms = document.getElementById("terms");
+
+const registerPasswordButton = document.getElementById("registerPasswordButton");
 
 const firstNameError = document.getElementById("firstNameError");
 const lastNameError = document.getElementById("lastNameError");
 const registerEmailError = document.getElementById("registerEmailError");
 const registerPasswordError = document.getElementById("registerPasswordError");
-const passwordMessage = document.getElementById("passwordMessage");
+const confirmPasswordError = document.getElementById("confirmPasswordError");
 const termsError = document.getElementById("termsError");
 const registerMessage = document.getElementById("registerMessage");
 
 // Switch
 showRegister.addEventListener("click", function () {
-    clearLoginErrors();
+    clearLoginFormErrors();
 
     loginSection.classList.remove("active");
     registerSection.classList.add("active");
@@ -45,7 +48,7 @@ showRegister.addEventListener("click", function () {
 });
 
 showLogin.addEventListener("click", function () {
-    clearRegisterErrors();
+    clearRegisterFormErrors();
 
     registerSection.classList.remove("active");
     loginSection.classList.add("active");
@@ -60,10 +63,12 @@ function togglePassword(input, button) {
 
     if (input.type === "password") {
         input.type = "text";
+
         icon.classList.remove("bi-eye");
         icon.classList.add("bi-eye-slash");
     } else {
         input.type = "password";
+
         icon.classList.remove("bi-eye-slash");
         icon.classList.add("bi-eye");
     }
@@ -78,13 +83,13 @@ registerPasswordButton.addEventListener("click", function () {
 });
 
 // Validation
-function showError(input, errorElement, message) {
-    input.classList.add("is-invalid");
+function showInputError(input, errorElement, message) {
+    input.classList.add("invalid");
     errorElement.textContent = message;
 }
 
-function clearError(input, errorElement) {
-    input.classList.remove("is-invalid");
+function clearInputError(input, errorElement) {
+    input.classList.remove("invalid");
     errorElement.textContent = "";
 }
 
@@ -93,182 +98,394 @@ function showMessage(element, message, type) {
     element.className = "form-message " + type;
 }
 
-function clearLoginErrors() {
-    clearError(loginEmail, loginEmailError);
-    clearError(loginPassword, loginPasswordError);
-
-    loginMessage.textContent = "";
-    loginMessage.className = "form-message";
-}
-
-function clearRegisterErrors() {
-    clearError(firstName, firstNameError);
-    clearError(lastName, lastNameError);
-    clearError(registerEmail, registerEmailError);
-    clearError(registerPassword, registerPasswordError);
-    clearError(confirmPassword, passwordMessage);
-
-    terms.classList.remove("is-invalid");
-
-    termsError.textContent = "";
-    registerMessage.textContent = "";
-    registerMessage.className = "form-message";
+function clearMessage(element) {
+    element.textContent = "";
+    element.className = "form-message";
 }
 
 function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-// Live validation
+function clearLoginFormErrors() {
+    clearInputError(loginEmail, loginEmailError);
+    clearInputError(loginPassword, loginPasswordError);
+
+    clearMessage(loginMessage);
+}
+
+function clearRegisterFormErrors() {
+    clearInputError(firstName, firstNameError);
+    clearInputError(lastName, lastNameError);
+    clearInputError(registerEmail, registerEmailError);
+    clearInputError(registerPassword, registerPasswordError);
+    clearInputError(confirmPassword, confirmPasswordError);
+
+    terms.classList.remove("invalid");
+
+    termsError.textContent = "";
+
+    clearMessage(registerMessage);
+}
+
+// Login validation
+function validateLoginForm() {
+    let isValid = true;
+
+    const email = loginEmail.value.trim();
+    const password = loginPassword.value;
+
+    clearLoginFormErrors();
+
+    if (email === "") {
+        showInputError(
+            loginEmail,
+            loginEmailError,
+            "Email address is required."
+        );
+
+        isValid = false;
+    } else if (!isValidEmail(email)) {
+        showInputError(
+            loginEmail,
+            loginEmailError,
+            "Enter a valid email address."
+        );
+
+        isValid = false;
+    }
+
+    if (password === "") {
+        showInputError(
+            loginPassword,
+            loginPasswordError,
+            "Password is required."
+        );
+
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+// Register validation
+function validateRegisterForm() {
+    let isValid = true;
+
+    const firstNameValue = firstName.value.trim();
+    const lastNameValue = lastName.value.trim();
+    const email = registerEmail.value.trim();
+    const password = registerPassword.value;
+    const confirmation = confirmPassword.value;
+
+    clearRegisterFormErrors();
+
+    if (firstNameValue === "") {
+        showInputError(
+            firstName,
+            firstNameError,
+            "First name is required."
+        );
+
+        isValid = false;
+    } else if (firstNameValue.length < 2) {
+        showInputError(
+            firstName,
+            firstNameError,
+            "First name must have at least 2 characters."
+        );
+
+        isValid = false;
+    }
+
+    if (lastNameValue === "") {
+        showInputError(
+            lastName,
+            lastNameError,
+            "Last name is required."
+        );
+
+        isValid = false;
+    } else if (lastNameValue.length < 2) {
+        showInputError(
+            lastName,
+            lastNameError,
+            "Last name must have at least 2 characters."
+        );
+
+        isValid = false;
+    }
+
+    if (email === "") {
+        showInputError(
+            registerEmail,
+            registerEmailError,
+            "Email address is required."
+        );
+
+        isValid = false;
+    } else if (!isValidEmail(email)) {
+        showInputError(
+            registerEmail,
+            registerEmailError,
+            "Enter a valid email address."
+        );
+
+        isValid = false;
+    }
+
+    if (password === "") {
+        showInputError(
+            registerPassword,
+            registerPasswordError,
+            "Password is required."
+        );
+
+        isValid = false;
+    } else if (password.length < 8) {
+        showInputError(
+            registerPassword,
+            registerPasswordError,
+            "Password must be at least 8 characters."
+        );
+
+        isValid = false;
+    }
+
+    if (confirmation === "") {
+        showInputError(
+            confirmPassword,
+            confirmPasswordError,
+            "Please confirm your password."
+        );
+
+        isValid = false;
+    } else if (confirmation !== password) {
+        showInputError(
+            confirmPassword,
+            confirmPasswordError,
+            "Passwords do not match."
+        );
+
+        isValid = false;
+    }
+
+    if (!terms.checked) {
+        terms.classList.add("invalid");
+
+        termsError.textContent =
+            "You must agree to the Terms and Conditions.";
+
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+// Login live validation
+loginEmail.addEventListener("input", function () {
+    clearMessage(loginMessage);
+
+    const email = loginEmail.value.trim();
+
+    if (email === "") {
+        showInputError(
+            loginEmail,
+            loginEmailError,
+            "Email address is required."
+        );
+    } else if (!isValidEmail(email)) {
+        showInputError(
+            loginEmail,
+            loginEmailError,
+            "Enter a valid email address."
+        );
+    } else {
+        clearInputError(
+            loginEmail,
+            loginEmailError
+        );
+    }
+});
+
+loginPassword.addEventListener("input", function () {
+    clearMessage(loginMessage);
+
+    if (loginPassword.value === "") {
+        showInputError(
+            loginPassword,
+            loginPasswordError,
+            "Password is required."
+        );
+    } else {
+        clearInputError(
+            loginPassword,
+            loginPasswordError
+        );
+    }
+});
+
+// Register live validation
 firstName.addEventListener("input", function () {
-    if (firstName.value.trim() !== "") {
-        clearError(firstName, firstNameError);
+    const value = firstName.value.trim();
+
+    if (value === "") {
+        showInputError(
+            firstName,
+            firstNameError,
+            "First name is required."
+        );
+    } else if (value.length < 2) {
+        showInputError(
+            firstName,
+            firstNameError,
+            "First name must have at least 2 characters."
+        );
+    } else {
+        clearInputError(
+            firstName,
+            firstNameError
+        );
     }
 });
 
 lastName.addEventListener("input", function () {
-    if (lastName.value.trim() !== "") {
-        clearError(lastName, lastNameError);
+    const value = lastName.value.trim();
+
+    if (value === "") {
+        showInputError(
+            lastName,
+            lastNameError,
+            "Last name is required."
+        );
+    } else if (value.length < 2) {
+        showInputError(
+            lastName,
+            lastNameError,
+            "Last name must have at least 2 characters."
+        );
+    } else {
+        clearInputError(
+            lastName,
+            lastNameError
+        );
     }
 });
 
 registerEmail.addEventListener("input", function () {
-    if (isValidEmail(registerEmail.value.trim())) {
-        clearError(registerEmail, registerEmailError);
+    clearMessage(registerMessage);
+
+    const email = registerEmail.value.trim();
+
+    if (email === "") {
+        showInputError(
+            registerEmail,
+            registerEmailError,
+            "Email address is required."
+        );
+    } else if (!isValidEmail(email)) {
+        showInputError(
+            registerEmail,
+            registerEmailError,
+            "Enter a valid email address."
+        );
+    } else {
+        clearInputError(
+            registerEmail,
+            registerEmailError
+        );
     }
 });
 
 registerPassword.addEventListener("input", function () {
-    if (registerPassword.value.length >= 8) {
-        clearError(registerPassword, registerPasswordError);
-    }
+    clearMessage(registerMessage);
 
-    validateConfirmPassword();
-});
+    const password = registerPassword.value;
 
-confirmPassword.addEventListener("input", validateConfirmPassword);
-
-function validateConfirmPassword() {
-    if (confirmPassword.value === "") {
-        clearError(confirmPassword, passwordMessage);
-        return;
-    }
-
-    if (registerPassword.value === confirmPassword.value) {
-        clearError(confirmPassword, passwordMessage);
-        passwordMessage.textContent = "Passwords match";
-        passwordMessage.className = "field-success";
+    if (password === "") {
+        showInputError(
+            registerPassword,
+            registerPasswordError,
+            "Password is required."
+        );
+    } else if (password.length < 8) {
+        showInputError(
+            registerPassword,
+            registerPasswordError,
+            "Password must be at least 8 characters."
+        );
     } else {
-        showError(
-            confirmPassword,
-            passwordMessage,
-            "Passwords do not match"
+        clearInputError(
+            registerPassword,
+            registerPasswordError
         );
     }
-}
+
+    if (confirmPassword.value !== "") {
+        if (confirmPassword.value !== password) {
+            showInputError(
+                confirmPassword,
+                confirmPasswordError,
+                "Passwords do not match."
+            );
+        } else {
+            clearInputError(
+                confirmPassword,
+                confirmPasswordError
+            );
+
+            confirmPasswordError.textContent = "Passwords match.";
+            confirmPasswordError.className = "input-success";
+        }
+    }
+});
+
+confirmPassword.addEventListener("input", function () {
+    const confirmation = confirmPassword.value;
+
+    confirmPasswordError.className = "input-error";
+
+    if (confirmation === "") {
+        showInputError(
+            confirmPassword,
+            confirmPasswordError,
+            "Please confirm your password."
+        );
+    } else if (confirmation !== registerPassword.value) {
+        showInputError(
+            confirmPassword,
+            confirmPasswordError,
+            "Passwords do not match."
+        );
+    } else {
+        clearInputError(
+            confirmPassword,
+            confirmPasswordError
+        );
+
+        confirmPasswordError.textContent = "Passwords match.";
+        confirmPasswordError.className = "input-success";
+    }
+});
 
 terms.addEventListener("change", function () {
-    if (terms.checked) {
-        terms.classList.remove("is-invalid");
+    if (!terms.checked) {
+        terms.classList.add("invalid");
+
+        termsError.textContent =
+            "You must agree to the Terms and Conditions.";
+    } else {
+        terms.classList.remove("invalid");
+
         termsError.textContent = "";
     }
-});
-
-loginEmail.addEventListener("input", function () {
-    if (isValidEmail(loginEmail.value.trim())) {
-        clearError(loginEmail, loginEmailError);
-    }
-
-    loginMessage.textContent = "";
-});
-
-loginPassword.addEventListener("input", function () {
-    if (loginPassword.value !== "") {
-        clearError(loginPassword, loginPasswordError);
-    }
-
-    loginMessage.textContent = "";
 });
 
 // Register
 registerForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    clearRegisterErrors();
-
-    let valid = true;
-
-    if (firstName.value.trim() === "") {
-        showError(firstName, firstNameError, "First name is required");
-        valid = false;
-    }
-
-    if (lastName.value.trim() === "") {
-        showError(lastName, lastNameError, "Last name is required");
-        valid = false;
-    }
-
-    if (registerEmail.value.trim() === "") {
-        showError(
-            registerEmail,
-            registerEmailError,
-            "Email address is required"
-        );
-
-        valid = false;
-    } else if (!isValidEmail(registerEmail.value.trim())) {
-        showError(
-            registerEmail,
-            registerEmailError,
-            "Enter a valid email address"
-        );
-
-        valid = false;
-    }
-
-    if (registerPassword.value === "") {
-        showError(
-            registerPassword,
-            registerPasswordError,
-            "Password is required"
-        );
-
-        valid = false;
-    } else if (registerPassword.value.length < 8) {
-        showError(
-            registerPassword,
-            registerPasswordError,
-            "Password must be at least 8 characters"
-        );
-
-        valid = false;
-    }
-
-    if (confirmPassword.value === "") {
-        showError(
-            confirmPassword,
-            passwordMessage,
-            "Please confirm your password"
-        );
-
-        valid = false;
-    } else if (registerPassword.value !== confirmPassword.value) {
-        showError(
-            confirmPassword,
-            passwordMessage,
-            "Passwords do not match"
-        );
-
-        valid = false;
-    }
-
-    if (!terms.checked) {
-        terms.classList.add("is-invalid");
-        termsError.textContent = "You must agree to the Terms and Conditions";
-        valid = false;
-    }
-
-    if (!valid) {
+    if (!validateRegisterForm()) {
         return;
     }
 
@@ -293,15 +510,17 @@ registerForm.addEventListener("submit", async function (event) {
 
         if (!response.ok) {
             if (data.message === "Email already registered") {
-                showError(
+                showInputError(
                     registerEmail,
                     registerEmailError,
-                    "Email is already registered"
+                    "Email is already registered."
                 );
+
+                registerEmail.focus();
             } else {
                 showMessage(
                     registerMessage,
-                    data.message || "Registration failed",
+                    data.message || "Registration failed.",
                     "error"
                 );
             }
@@ -312,13 +531,15 @@ registerForm.addEventListener("submit", async function (event) {
         const registeredEmail = data.email;
 
         registerForm.reset();
-        clearRegisterErrors();
+
+        clearRegisterFormErrors();
 
         registerSection.classList.remove("active");
         loginSection.classList.add("active");
 
         authTitle.textContent = "Welcome Back";
-        authDescription.textContent = "Sign in to continue to your account.";
+        authDescription.textContent =
+            "Sign in to continue to your account.";
 
         loginEmail.value = registeredEmail;
 
@@ -330,7 +551,7 @@ registerForm.addEventListener("submit", async function (event) {
     } catch (error) {
         showMessage(
             registerMessage,
-            "Cannot connect to the server",
+            "Cannot connect to the server.",
             "error"
         );
     }
@@ -340,39 +561,7 @@ registerForm.addEventListener("submit", async function (event) {
 loginForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    clearLoginErrors();
-
-    let valid = true;
-
-    if (loginEmail.value.trim() === "") {
-        showError(
-            loginEmail,
-            loginEmailError,
-            "Email address is required"
-        );
-
-        valid = false;
-    } else if (!isValidEmail(loginEmail.value.trim())) {
-        showError(
-            loginEmail,
-            loginEmailError,
-            "Enter a valid email address"
-        );
-
-        valid = false;
-    }
-
-    if (loginPassword.value === "") {
-        showError(
-            loginPassword,
-            loginPasswordError,
-            "Password is required"
-        );
-
-        valid = false;
-    }
-
-    if (!valid) {
+    if (!validateLoginForm()) {
         return;
     }
 
@@ -396,24 +585,24 @@ loginForm.addEventListener("submit", async function (event) {
         if (!response.ok) {
             showMessage(
                 loginMessage,
-                data.message || "Invalid email or password",
+                data.message || "Invalid email or password.",
                 "error"
             );
 
-            loginPassword.classList.add("is-invalid");
+            loginPassword.classList.add("invalid");
 
             return;
         }
 
         showMessage(
             loginMessage,
-            "Login successful",
+            "Login successful.",
             "success"
         );
     } catch (error) {
         showMessage(
             loginMessage,
-            "Cannot connect to the server",
+            "Cannot connect to the server.",
             "error"
         );
     }
