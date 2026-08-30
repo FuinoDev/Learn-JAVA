@@ -36,4 +36,21 @@ public class AuthController {
                 )
         );
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
+
+        User user = authService.login(
+                request.get("email"),
+                request.get("password")
+        );
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "Login successful",
+                        "id", user.getId(),
+                        "email", user.getEmail()
+                )
+        );
+    }
 }
