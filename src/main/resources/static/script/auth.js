@@ -491,7 +491,7 @@ registerForm.addEventListener("submit", async function (event) {
 
     try {
         const response = await fetch(
-            "http://localhost:8080/api/auth/register",
+            "/api/auth/register",
             {
                 method: "POST",
                 headers: {
@@ -567,7 +567,7 @@ loginForm.addEventListener("submit", async function (event) {
 
     try {
         const response = await fetch(
-            "http://localhost:8080/api/auth/login",
+            "/api/auth/login",
             {
                 method: "POST",
                 headers: {
@@ -599,6 +599,9 @@ loginForm.addEventListener("submit", async function (event) {
             "Login successful.",
             "success"
         );
+
+        window.location.href = "/dashboard.html";
+
     } catch (error) {
         showMessage(
             loginMessage,

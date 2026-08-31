@@ -83,4 +83,39 @@ public class AuthController {
                 )
         );
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> me() {
+
+        String email =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName();
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "User is authenticated",
+                        "email", email
+                )
+        );
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+
+        if (session != null) {
+            session.invalidate();
+        }
+
+        SecurityContextHolder.clearContext();
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "Logout successful"
+                )
+        );
+    }
 }

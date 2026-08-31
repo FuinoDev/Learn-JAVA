@@ -17,8 +17,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/",
                                 "/index.html",
-                                "/style.css",
-                                "/script.js",
+                                "/style/**",
+                                "/script/**",
                                 "/api/auth/register",
                                 "/api/auth/login"
                         ).permitAll()
