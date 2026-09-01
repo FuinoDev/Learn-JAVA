@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +38,7 @@
                 Dashboard
             </a>
 
-            <a href="#" class="nav-link">
+            <a href="#productsSection" class="nav-link">
                 <i class="bi bi-box"></i>
                 Products
             </a>
@@ -89,7 +90,10 @@
 
                 <span id="userEmail"></span>
 
-                <button id="logoutButton" class="btn btn-outline-danger">
+                <button
+                        id="logoutButton"
+                        class="btn btn-outline-danger"
+                >
                     <i class="bi bi-box-arrow-right"></i>
                     Logout
                 </button>
@@ -108,7 +112,7 @@
 
                         <div>
                             <p>Total Products</p>
-                            <h2>0</h2>
+                            <h2 id="totalProducts">0</h2>
                         </div>
 
                         <i class="bi bi-box"></i>
@@ -123,7 +127,7 @@
 
                         <div>
                             <p>Total Stock</p>
-                            <h2>0</h2>
+                            <h2 id="totalStock">0</h2>
                         </div>
 
                         <i class="bi bi-boxes"></i>
@@ -138,7 +142,7 @@
 
                         <div>
                             <p>Total Sales</p>
-                            <h2>₱0.00</h2>
+                            <h2 id="totalSales">₱0.00</h2>
                         </div>
 
                         <i class="bi bi-cash-stack"></i>
@@ -153,12 +157,64 @@
 
                         <div>
                             <p>Low Stock</p>
-                            <h2>0</h2>
+                            <h2 id="lowStock">0</h2>
                         </div>
 
                         <i class="bi bi-exclamation-triangle"></i>
 
                     </div>
+
+                </div>
+
+            </div>
+
+            <div
+                    class="products-section"
+                    id="productsSection"
+            >
+
+                <div class="section-header">
+
+                    <div>
+                        <h2>Products</h2>
+                        <p>Manage your inventory products</p>
+                    </div>
+
+                    <button
+                            class="btn btn-primary"
+                            id="addProductButton"
+                            data-bs-toggle="modal"
+                            data-bs-target="#productModal"
+                    >
+                        <i class="bi bi-plus-lg"></i>
+                        Add Product
+                    </button>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle">
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Low Stock Level</th>
+                            <th>Actions</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="productTableBody">
+
+                        </tbody>
+
+                    </table>
 
                 </div>
 
@@ -170,7 +226,200 @@
 
 </div>
 
+<div
+        class="modal fade"
+        id="productModal"
+        tabindex="-1"
+        aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title" id="productModalTitle">
+                    Add Product
+                </h5>
+
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <form id="productForm">
+
+                <div class="modal-body">
+
+                    <input
+                            type="hidden"
+                            id="productId"
+                    >
+
+                    <div class="mb-3">
+
+                        <label
+                                for="productName"
+                                class="form-label"
+                        >
+                            Product Name
+                        </label>
+
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="productName"
+                                placeholder="Enter product name"
+                        >
+
+                        <small
+                                id="productNameError"
+                                class="input-error"
+                        ></small>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                                for="productCategory"
+                                class="form-label"
+                        >
+                            Category
+                        </label>
+
+                        <input
+                                type="text"
+                                class="form-control"
+                                id="productCategory"
+                                placeholder="Enter category"
+                        >
+
+                        <small
+                                id="productCategoryError"
+                                class="input-error"
+                        ></small>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                                for="productPrice"
+                                class="form-label"
+                        >
+                            Price
+                        </label>
+
+                        <input
+                                type="number"
+                                class="form-control"
+                                id="productPrice"
+                                placeholder="0.00"
+                                min="0"
+                                step="0.01"
+                        >
+
+                        <small
+                                id="productPriceError"
+                                class="input-error"
+                        ></small>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                                for="productQuantity"
+                                class="form-label"
+                        >
+                            Quantity
+                        </label>
+
+                        <input
+                                type="number"
+                                class="form-control"
+                                id="productQuantity"
+                                placeholder="0"
+                                min="0"
+                        >
+
+                        <small
+                                id="productQuantityError"
+                                class="input-error"
+                        ></small>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                                for="lowStockLevel"
+                                class="form-label"
+                        >
+                            Low Stock Level
+                        </label>
+
+                        <input
+                                type="number"
+                                class="form-control"
+                                id="lowStockLevel"
+                                placeholder="5"
+                                min="0"
+                        >
+
+                        <small
+                                id="lowStockLevelError"
+                                class="input-error"
+                        ></small>
+
+                    </div>
+
+                    <div
+                            id="productMessage"
+                            class="product-message"
+                    ></div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="saveProductButton"
+                    >
+                        Save Product
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+></script>
+
 <script src="/script/dashboard.js"></script>
 
 </body>
+
 </html>
